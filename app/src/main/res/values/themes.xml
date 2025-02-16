@@ -1,0 +1,15 @@
+<resources>
+    <style name="Base.Theme.DicodingEvent" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/dark_grey</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="CustomSearchView" parent="Theme.Material3.Light">
+        <item name="colorControlNormal">@color/dark_grey</item>
+        <item name="colorAccent">@color/dark_grey</item>
+        <item name="android:fontFamily">@font/inter_medium</item>
+        <item name="android:textColorPrimary">@color/dark_grey</item>
+        <item name="android:textColorHint">@color/dark_grey</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+</resources>

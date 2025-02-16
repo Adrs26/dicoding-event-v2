@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Dicoding Event</string>
+    <string name="your_favorite_event">Your favorite event</string>
+    <string name="upcoming_tab">Upcoming</string>
+    <string name="completed_tab">Completed</string>
+    <string name="event_image_cover">Event image cover</string>
+    <string name="event_date_same_day">%1$s | %2$s - %3$s WIB</string>
+    <string name="event_date_different_day">%1$s | %2$s - %3$s | %4$s WIB</string>
+    <string name="empty_upcoming_event">There is no upcoming event</string>
+    <string name="no_internet_connection">Internet connection was not found</string>
+    <string name="back_button">Back to previous menu</string>
+    <string name="event_detail">Event detail</string>
+    <string name="owner_name">Owner:</string>
+    <string name="category">Category:</string>
+    <string name="date">Date:</string>
+    <string name="city_name">Location:</string>
+    <string name="quota">Quota remaining:</string>
+    <string name="description">Description:</string>
+    <string name="go_to_website">Go to the website</string>
+    <string name="search_your_favorite_event">Search your favorite event</string>
+    <string name="event_not_found">The event you are looking for was not found</string>
+    <string name="favorite">Favorite</string>
+    <string name="empty_favorite_event">Your favorite event list is still empty</string>
+    <string name="event_saved_to_favorites">Event saved to favorites</string>
+    <string name="event_removed_from_favorites">Event removed from favorites</string>"
+</resources>
