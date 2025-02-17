@@ -1,5 +1,6 @@
 package com.dicoding.dicodingevent.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -39,7 +40,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(R.id.action_home_fragment_to_search_fragment)
         }
         binding.ibFavorite.setOnClickListener {
-            findNavController().navigate(R.id.action_home_fragment_to_favorite_fragment)
+            startActivity(Intent().setClassName(
+                requireContext(),
+                "com.dicoding.favorite.FavoriteActivity")
+            )
         }
     }
 }

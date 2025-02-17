@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dicoding.dicodingevent.core.data.remote.network.ApiResponse
-import com.dicoding.dicodingevent.core.domain.model.Event
-import com.dicoding.dicodingevent.core.domain.usecase.EventUseCase
-import com.dicoding.dicodingevent.core.util.DataHelper
+import com.dicoding.core.data.remote.network.ApiResponse
+import com.dicoding.core.domain.model.Event
+import com.dicoding.core.domain.usecase.EventUseCase
+import com.dicoding.core.util.DataHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

@@ -20,7 +20,7 @@
     <string name="search_your_favorite_event">Search your favorite event</string>
     <string name="event_not_found">The event you are looking for was not found</string>
     <string name="favorite">Favorite</string>
-    <string name="empty_favorite_event">Your favorite event list is still empty</string>
     <string name="event_saved_to_favorites">Event saved to favorites</string>
-    <string name="event_removed_from_favorites">Event removed from favorites</string>"
+    <string name="event_removed_from_favorites">Event removed from favorites</string>
+    <string name="title_favorite">Favorite</string>"
 </resources>

@@ -12,9 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.dicoding.dicodingevent.R
-import com.dicoding.dicodingevent.core.data.remote.network.ApiResponse
-import com.dicoding.dicodingevent.core.ui.EventAdapter
-import com.dicoding.dicodingevent.core.util.DataHelper
+import com.dicoding.core.data.remote.network.ApiResponse
+import com.dicoding.core.ui.EventAdapter
+import com.dicoding.core.util.DataHelper
 import com.dicoding.dicodingevent.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
