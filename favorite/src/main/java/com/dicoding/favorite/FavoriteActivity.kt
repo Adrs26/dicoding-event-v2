@@ -1,5 +1,6 @@
 package com.dicoding.favorite
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -9,6 +10,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.dicoding.core.ui.EventAdapter
 import com.dicoding.core.util.DataHelper
 import com.dicoding.dicodingevent.di.FavoriteModuleDependencies
+import com.dicoding.dicodingevent.ui.main.MainActivity
 import com.dicoding.favorite.databinding.ActivityFavoriteBinding
 import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
@@ -44,6 +46,8 @@ class FavoriteActivity : AppCompatActivity(R.layout.activity_favorite) {
         eventAdapter = EventAdapter(object : EventAdapter.OnItemClickListener {
             override fun onItemClick(id: Int) {
                 DataHelper.eventId = id
+                DataHelper.menuId = 1
+                startActivity(Intent(this@FavoriteActivity, MainActivity::class.java))
             }
         })
         binding.rvFavorite.layoutManager = LinearLayoutManager(this)

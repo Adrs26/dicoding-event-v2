@@ -37,7 +37,7 @@ class EventAdapter(
         private val itemBinding: ItemEventBinding
     ) : RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(data: Event) {
-            Glide.with(itemBinding.root.context)
+            Glide.with(itemView.context)
                 .load(data.imageLogo)
                 .centerCrop()
                 .into(itemBinding.ivEventImage)

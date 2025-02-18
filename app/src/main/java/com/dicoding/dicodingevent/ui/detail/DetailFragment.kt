@@ -38,7 +38,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun setupButton() {
         binding.ibBack.setOnClickListener {
-            findNavController().navigateUp()
+            if (DataHelper.menuId == 0) {
+                findNavController().navigateUp()
+            } else {
+                DataHelper.menuId = 0
+                requireActivity().finish()
+            }
         }
 
         binding.ibFavorite.setOnClickListener {
