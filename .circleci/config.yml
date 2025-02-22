@@ -11,6 +11,12 @@ jobs:
       - restore_cache:
           key: android-orb-v1-
       - run:
+          name: Gunakan JDK 17 di CircleCI
+          command: |
+            export JAVA_HOME=C:\Program Files\Java\jdk-17
+            export PATH=$JAVA_HOME/bin:$PATH
+            echo "JAVA_HOME set ke $JAVA_HOME"
+      - run:
           name: Chmod permissions
           command: sudo chmod +x ./gradlew
       - run:
