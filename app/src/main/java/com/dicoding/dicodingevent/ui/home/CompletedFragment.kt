@@ -1,7 +1,9 @@
 package com.dicoding.dicodingevent.ui.home
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -9,21 +11,31 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.kirich1409.viewbindingdelegate.viewBinding
-import com.dicoding.dicodingevent.R
+import com.dicoding.core.data.remote.network.ApiResponse
 import com.dicoding.core.ui.EventAdapter
 import com.dicoding.core.util.DataHelper
-import com.dicoding.core.data.remote.network.ApiResponse
+import com.dicoding.dicodingevent.R
 import com.dicoding.dicodingevent.databinding.FragmentCompletedBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CompletedFragment : Fragment(R.layout.fragment_completed) {
-    private val binding by viewBinding(FragmentCompletedBinding::bind)
+class CompletedFragment : Fragment() {
+    private var _binding: FragmentCompletedBinding? = null
+    private val binding get() = _binding!!
+
     private val completedViewModel: CompletedViewModel by viewModels()
     private lateinit var eventAdapter: EventAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentCompletedBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,5 +82,11 @@ class CompletedFragment : Fragment(R.layout.fragment_completed) {
         binding.pbCompleted.visibility = pbVisibility
         binding.rvCompleted.visibility = rvVisibility
         binding.tvMessage.visibility = tvVisibility
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.rvCompleted.adapter = null
+        _binding = null
     }
 }

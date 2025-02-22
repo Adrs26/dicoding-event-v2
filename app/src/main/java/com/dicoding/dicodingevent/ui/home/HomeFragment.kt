@@ -2,18 +2,33 @@ package com.dicoding.dicodingevent.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import by.kirich1409.viewbindingdelegate.viewBinding
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.dicoding.dicodingevent.R
 import com.dicoding.dicodingevent.databinding.FragmentHomeBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home) {
-    private val binding by viewBinding(FragmentHomeBinding::bind)
+class HomeFragment : Fragment() {
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
+    private var viewPagerAdapter: FragmentStateAdapter? = null
+    private var tabMediator: TabLayoutMediator? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -22,17 +37,29 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupTabLayoutViewPager() {
-        val fragments = listOf(UpcomingFragment(), CompletedFragment())
-        val viewPagerAdapter = ViewPagerAdapter(childFragmentManager, lifecycle, fragments)
+        viewPagerAdapter = object : FragmentStateAdapter(
+            childFragmentManager,
+            viewLifecycleOwner.lifecycle
+        ) {
+            override fun getItemCount() = 2
+            override fun createFragment(position: Int): Fragment {
+                return when (position) {
+                    0 -> UpcomingFragment()
+                    1 -> CompletedFragment()
+                    else -> throw IllegalStateException("Invalid position")
+                }
+            }
+        }
         binding.viewPager.adapter = viewPagerAdapter
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+        tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> resources.getString(R.string.upcoming_tab)
                 1 -> resources.getString(R.string.completed_tab)
                 else -> null
             }
-        }.attach()
+        }
+        tabMediator?.attach()
     }
 
     private fun setupButton() {
@@ -45,5 +72,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 "com.dicoding.favorite.FavoriteActivity")
             )
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        tabMediator?.detach()
+        tabMediator = null
+        binding.viewPager.adapter = null
+        viewPagerAdapter = null
+        _binding = null
     }
 }

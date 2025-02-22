@@ -1,7 +1,9 @@
 package com.dicoding.dicodingevent.ui.home
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -9,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.dicoding.core.data.remote.network.ApiResponse
 import com.dicoding.core.ui.EventAdapter
 import com.dicoding.core.util.DataHelper
@@ -20,10 +21,21 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
-    private val binding by viewBinding(FragmentUpcomingBinding::bind)
+class UpcomingFragment : Fragment() {
+    private var _binding: FragmentUpcomingBinding? = null
+    private val binding get() = _binding!!
+
     private val upcomingViewModel: UpcomingViewModel by viewModels()
     private lateinit var eventAdapter: EventAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentUpcomingBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,5 +82,11 @@ class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
         binding.pbUpcoming.visibility = pbVisibility
         binding.rvUpcoming.visibility = rvVisibility
         binding.tvMessage.visibility = tvVisibility
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.rvUpcoming.adapter = null
+        _binding = null
     }
 }

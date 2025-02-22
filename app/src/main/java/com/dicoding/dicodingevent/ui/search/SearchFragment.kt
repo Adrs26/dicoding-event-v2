@@ -1,7 +1,9 @@
 package com.dicoding.dicodingevent.ui.search
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -10,21 +12,31 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.kirich1409.viewbindingdelegate.viewBinding
-import com.dicoding.dicodingevent.R
 import com.dicoding.core.data.remote.network.ApiResponse
 import com.dicoding.core.ui.EventAdapter
 import com.dicoding.core.util.DataHelper
+import com.dicoding.dicodingevent.R
 import com.dicoding.dicodingevent.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(R.layout.fragment_search) {
-    private val binding by viewBinding(FragmentSearchBinding::bind)
+class SearchFragment : Fragment() {
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+
     private val searchViewModel: SearchViewModel by viewModels()
     private lateinit var eventAdapter: EventAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -94,5 +106,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         binding.pbSearch.visibility = pbVisibility
         binding.rvSearch.visibility = rvVisibility
         binding.tvMessage.visibility = tvVisibility
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

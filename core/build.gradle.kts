@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp")
     id("kotlin-kapt")
 }
 
@@ -47,6 +48,7 @@ dependencies {
     api(libs.viewbindingpropertydelegate.noreflection)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
     api(libs.glide)
     implementation(libs.hilt.android)
     api(libs.androidx.lifecycle.livedata.ktx)
@@ -54,7 +56,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     kapt(libs.hilt.android.compiler)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.android.database.sqlcipher)
+    implementation(libs.androidx.sqlite.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
