@@ -1,21 +1,19 @@
 version: 2.1
- 
 orbs:
-  android: circleci/android@0.2.1
- 
+  android: circleci/android@2.5.0
 jobs:
   build:
-    executor: android/android
+    executor:
+      name: android/android-machine
+      resource-class: large
+      tag: default
     steps:
       - checkout
+      - run: java --version
       - restore_cache:
           key: android-orb-v1-
-      - run:
-          name: Gunakan JDK 17 di CircleCI
-          command: |
-            export JAVA_HOME="/c/Program Files/Java/jdk-17"
-            export PATH=$JAVA_HOME/bin:$PATH
-            echo "JAVA_HOME set ke $JAVA_HOME"
+      - android/change-java-version:
+            java-version: 17
       - run:
           name: Chmod permissions
           command: sudo chmod +x ./gradlew
