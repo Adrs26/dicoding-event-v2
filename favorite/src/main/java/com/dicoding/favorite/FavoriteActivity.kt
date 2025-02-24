@@ -6,17 +6,15 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.dicoding.core.ui.EventAdapter
-import com.dicoding.core.util.DataHelper
 import com.dicoding.dicodingevent.di.FavoriteModuleDependencies
-import com.dicoding.dicodingevent.ui.main.MainActivity
+import com.dicoding.dicodingevent.ui.detail.DetailActivity
 import com.dicoding.favorite.databinding.ActivityFavoriteBinding
 import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
-class FavoriteActivity : AppCompatActivity(R.layout.activity_favorite) {
-    private val binding by viewBinding(ActivityFavoriteBinding::bind)
+class FavoriteActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityFavoriteBinding
 
     @Inject
     lateinit var factory: FavoriteViewModelFactory
@@ -38,16 +36,26 @@ class FavoriteActivity : AppCompatActivity(R.layout.activity_favorite) {
             .build()
             .inject(this)
         super.onCreate(savedInstanceState)
+        setupViewBinding()
         setupRecyclerViewAdapter()
         getFavoriteEvents()
+    }
+
+    private fun setupViewBinding() {
+        binding = ActivityFavoriteBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     private fun setupRecyclerViewAdapter() {
         eventAdapter = EventAdapter(object : EventAdapter.OnItemClickListener {
             override fun onItemClick(id: Int) {
-                DataHelper.eventId = id
-                DataHelper.menuId = 1
-                startActivity(Intent(this@FavoriteActivity, MainActivity::class.java))
+                val intent = Intent(this@FavoriteActivity, DetailActivity::class.java)
+                    .apply {
+                        putExtras(Bundle().apply {
+                            putInt(DetailActivity.EXTRA_ID, id)
+                        })
+                    }
+                startActivity(intent)
             }
         })
         binding.rvFavorite.layoutManager = LinearLayoutManager(this)

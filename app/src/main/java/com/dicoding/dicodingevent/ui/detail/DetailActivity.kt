@@ -4,67 +4,58 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.dicoding.core.data.remote.network.ApiResponse
 import com.dicoding.core.domain.model.Event
-import com.dicoding.core.util.DataHelper
 import com.dicoding.core.util.DateHelper.convertDate
 import com.dicoding.dicodingevent.R
-import com.dicoding.dicodingevent.databinding.FragmentDetailBinding
+import com.dicoding.dicodingevent.databinding.ActivityDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DetailFragment : Fragment() {
-    private var _binding: FragmentDetailBinding? = null
-    private val binding get() = _binding!!
-
+class DetailActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityDetailBinding
     private val detailViewModel: DetailViewModel by viewModels()
+    private var event: Event? = null
     private var isFavorite = false
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentDetailBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setupViewBinding()
         setupButton()
         getEventDetail()
     }
 
+    private fun setupViewBinding() {
+        binding = ActivityDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
+
     private fun setupButton() {
         binding.ibBack.setOnClickListener {
-            if (DataHelper.menuId == 0) {
-                findNavController().navigateUp()
-            } else {
-                DataHelper.menuId = 0
-                requireActivity().finish()
-            }
+            finish()
         }
 
         binding.ibFavorite.setOnClickListener {
             lifecycleScope.launch {
                 if (isFavorite) {
-                    detailViewModel.deleteFavoriteEvent()
+                    intent.extras?.getInt(EXTRA_ID, 0)?.let { eventId ->
+                        detailViewModel.deleteFavoriteEvent(eventId)
+                    }
                     setupToast(getString(R.string.event_removed_from_favorites))
                 } else {
-                    detailViewModel.insertFavoriteEvent()
+                    event?.let { event ->
+                        detailViewModel.insertFavoriteEvent(event)
+                    }
                     setupToast(getString(R.string.event_saved_to_favorites))
                 }
             }
@@ -72,26 +63,29 @@ class DetailFragment : Fragment() {
     }
 
     private fun getEventDetail() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                detailViewModel.eventDetail.collectLatest { state ->
-                    when (state) {
-                        is ApiResponse.Loading -> setUiVisibility(View.VISIBLE, View.GONE, View.GONE)
-                        is ApiResponse.Empty -> setUiVisibility(View.GONE, View.GONE, View.VISIBLE)
-                        is ApiResponse.Success -> {
-                            setUiVisibility(View.GONE, View.VISIBLE, View.GONE)
-                            setEventDetail(state.data)
-                        }
-                        is ApiResponse.Error -> {
-                            setUiVisibility(View.GONE, View.GONE, View.VISIBLE)
-                            binding.tvMessage.text = getString(R.string.no_internet_connection)
+                intent.extras?.getInt(EXTRA_ID, 0)?.let { eventId ->
+                    detailViewModel.checkIsEventFavorite(eventId)
+                    detailViewModel.getEventDetail(eventId).collectLatest { state ->
+                        when (state) {
+                            is ApiResponse.Loading -> setUiVisibility(View.VISIBLE, View.GONE, View.GONE)
+                            is ApiResponse.Empty -> setUiVisibility(View.GONE, View.GONE, View.VISIBLE)
+                            is ApiResponse.Success -> {
+                                setUiVisibility(View.GONE, View.VISIBLE, View.GONE)
+                                setEventDetail(state.data)
+                            }
+                            is ApiResponse.Error -> {
+                                setUiVisibility(View.GONE, View.GONE, View.VISIBLE)
+                                binding.tvMessage.text = getString(R.string.no_internet_connection)
+                            }
                         }
                     }
                 }
             }
         }
 
-        detailViewModel.isFavorite.observe(viewLifecycleOwner) { status ->
+        detailViewModel.isFavorite.observe(this) { status ->
             isFavorite = status
             binding.ibFavorite.setImageResource(
                 if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_unfavorite
@@ -107,7 +101,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun setEventDetail(event: Event) {
-        Glide.with(requireContext())
+        Glide.with(this)
             .load(event.mediaCover)
             .centerCrop()
             .into(binding.ivEventImage)
@@ -116,7 +110,7 @@ class DetailFragment : Fragment() {
             tvEventTitle.text = event.name
             tvEventOwnerName.text = event.ownerName
             tvEventCategoryName.text = event.category
-            tvEventDateBegin.text = convertDate(requireContext(), event.beginTime, event.endTime)
+            tvEventDateBegin.text = convertDate(this@DetailActivity, event.beginTime, event.endTime)
             tvEventCityName.text = event.cityName
             (event.quota - event.registrants).toString().also {
                 tvEventQuotaRemaining.text = it
@@ -129,20 +123,19 @@ class DetailFragment : Fragment() {
 
         binding.registerButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(event.link) }
-            if (intent.resolveActivity(requireActivity().packageManager) != null) {
+            if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)
             }
         }
 
-        DataHelper.event = event
+        this.event = event
     }
 
     private fun setupToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    companion object {
+        const val EXTRA_ID = "extra_id"
     }
 }

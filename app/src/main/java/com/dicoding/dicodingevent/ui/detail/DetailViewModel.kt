@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.dicoding.core.data.remote.network.ApiResponse
 import com.dicoding.core.domain.model.Event
 import com.dicoding.core.domain.usecase.EventUseCase
-import com.dicoding.core.util.DataHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,23 +20,21 @@ class DetailViewModel @Inject constructor(private val eventUseCase: EventUseCase
     private val _isFavorite = MutableLiveData<Boolean>()
     val isFavorite: LiveData<Boolean> = _isFavorite
 
-    init {
-        viewModelScope.launch {
-            eventUseCase.isEventExist(DataHelper.eventId).collectLatest { status ->
-                _isFavorite.value = status > 0
-            }
+    fun checkIsEventFavorite(id: Int) = viewModelScope.launch {
+        eventUseCase.isEventExist(id).collectLatest { status ->
+            _isFavorite.value = status > 0
         }
     }
 
-    val eventDetail: StateFlow<ApiResponse<Event>> =
-        eventUseCase.getEventById(DataHelper.eventId)
+    fun getEventDetail(id: Int): StateFlow<ApiResponse<Event>> =
+        eventUseCase.getEventById(id)
             .stateIn(viewModelScope, SharingStarted.Lazily, ApiResponse.Loading)
 
-    fun insertFavoriteEvent() = viewModelScope.launch {
-        eventUseCase.insertFavoriteEvent(DataHelper.event!!)
+    fun insertFavoriteEvent(event: Event) = viewModelScope.launch {
+        eventUseCase.insertFavoriteEvent(event)
     }
 
-    fun deleteFavoriteEvent() = viewModelScope.launch {
-        eventUseCase.deleteFavoriteEvent(DataHelper.eventId)
+    fun deleteFavoriteEvent(id: Int) = viewModelScope.launch {
+        eventUseCase.deleteFavoriteEvent(id)
     }
 }

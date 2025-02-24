@@ -1,5 +1,6 @@
 package com.dicoding.dicodingevent.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.dicoding.core.ui.EventAdapter
 import com.dicoding.core.util.DataHelper
 import com.dicoding.dicodingevent.R
 import com.dicoding.dicodingevent.databinding.FragmentUpcomingBinding
+import com.dicoding.dicodingevent.ui.detail.DetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -46,8 +48,12 @@ class UpcomingFragment : Fragment() {
     private fun setupRecyclerViewAdapter() {
         eventAdapter = EventAdapter(object : EventAdapter.OnItemClickListener {
             override fun onItemClick(id: Int) {
-                DataHelper.eventId = id
-                findNavController().navigate(R.id.action_home_fragment_to_detail_fragment)
+                val intent = Intent(requireContext(), DetailActivity::class.java).apply {
+                    putExtras(Bundle().apply {
+                        putInt(DetailActivity.EXTRA_ID, id)
+                    })
+                }
+                startActivity(intent)
             }
         })
         binding.rvUpcoming.layoutManager = LinearLayoutManager(requireContext())

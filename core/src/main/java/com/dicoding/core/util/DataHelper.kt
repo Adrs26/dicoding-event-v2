@@ -5,10 +5,6 @@ import com.dicoding.core.data.remote.response.DetailEventResponse
 import com.dicoding.core.domain.model.Event
 
 object DataHelper {
-    var eventId: Int = 0
-    var event: Event? = null
-    var menuId: Int = 0
-
     fun mapResponsesToDomain(input: List<DetailEventResponse>): List<Event> =
         input.map {
             Event(
