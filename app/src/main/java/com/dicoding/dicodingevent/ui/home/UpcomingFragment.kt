@@ -10,11 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.core.data.remote.network.ApiResponse
 import com.dicoding.core.ui.EventAdapter
-import com.dicoding.core.util.DataHelper
 import com.dicoding.dicodingevent.R
 import com.dicoding.dicodingevent.databinding.FragmentUpcomingBinding
 import com.dicoding.dicodingevent.ui.detail.DetailActivity

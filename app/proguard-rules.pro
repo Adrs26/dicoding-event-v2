@@ -1,21 +1,25 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
-
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-dontwarn com.dicoding.core.data.EventRepository
+-dontwarn com.dicoding.core.data.local.LocalDataSource
+-dontwarn com.dicoding.core.data.remote.RemoteDataSource
+-dontwarn com.dicoding.core.data.remote.network.ApiResponse$Empty
+-dontwarn com.dicoding.core.data.remote.network.ApiResponse$Error
+-dontwarn com.dicoding.core.data.remote.network.ApiResponse$Loading
+-dontwarn com.dicoding.core.data.remote.network.ApiResponse$Success
+-dontwarn com.dicoding.core.data.remote.network.ApiResponse
+-dontwarn com.dicoding.core.data.remote.network.ApiService
+-dontwarn com.dicoding.core.di.DatabaseModule
+-dontwarn com.dicoding.core.di.DatabaseModule_ProvideDatabaseFactory
+-dontwarn com.dicoding.core.di.DatabaseModule_ProvideEventDaoFactory
+-dontwarn com.dicoding.core.di.NetworkModule
+-dontwarn com.dicoding.core.di.NetworkModule_ProvideApiServiceFactory
+-dontwarn com.dicoding.core.di.RepositoryModule
+-dontwarn com.dicoding.core.domain.model.Event
+-dontwarn com.dicoding.core.domain.repository.IEventRepository
+-dontwarn com.dicoding.core.domain.usecase.EventInteractor
+-dontwarn com.dicoding.core.domain.usecase.EventUseCase
+-dontwarn com.dicoding.core.ui.EventAdapter$OnItemClickListener
+-dontwarn com.dicoding.core.ui.EventAdapter
+-dontwarn com.dicoding.core.util.DateHelper
+-dontwarn hilt_aggregated_deps._com_dicoding_core_di_DatabaseModule
+-dontwarn hilt_aggregated_deps._com_dicoding_core_di_NetworkModule
+-dontwarn hilt_aggregated_deps._com_dicoding_core_di_RepositoryModule

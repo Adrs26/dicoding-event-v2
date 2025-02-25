@@ -4,6 +4,7 @@ androidDatabaseSqlcipher = "4.5.4"
 fragmentKtx = "1.8.6"
 glide = "4.16.0"
 hiltAndroid = "2.51.1"
+#noinspection GradleDependency
 kotlin = "1.9.24"
 #noinspection GradleDependency
 coreKtx = "1.13.1"
